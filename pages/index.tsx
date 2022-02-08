@@ -10,9 +10,9 @@ const Home: NextPage = () => {
     (async () => {
       const res = await axios.request({
         method: 'GET',
-        url: '/api/users/findFirst',
+        url: '/api/user/findFirst',
       });
-      console.log(res?.data);
+      console.log(res?.data, 43);
     })();
   }, []);
   return (
