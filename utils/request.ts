@@ -2,10 +2,11 @@
  * Файл запросов на сервер
  */
 import axios from 'axios';
+import { Prisma as P, PrismaPromise, wp_users } from '@prisma/client';
 
 interface RequestParams {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  server: string;
+  server?: string;
   url: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: any;
@@ -17,16 +18,14 @@ interface RequestParams {
 }
 
 /**
- * Псевдо метод запроса на сервер
- * @param args
- * @returns
+ * Метод запроса на сервер
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function send(props: RequestParams): Promise<any> {
   const { method, url, body, params, headers, responseType, server } = props;
+  const _server = server || '';
   const _headers = { ...headers } || {};
-  let newUrl = `${server}/${url}`;
-  newUrl = responseType === 'blob' ? `${process.env.NEXT_PUBLIC_SERVER}/${url}` : newUrl;
+  const newUrl = `${_server}${url}`;
   return new Promise((resolve) => {
     axios
       .request({
@@ -53,5 +52,23 @@ async function send(props: RequestParams): Promise<any> {
           resolve(error.response.data);
         }
       });
+  });
+}
+
+/**
+ * Получить одного пользователя
+ */
+export async function userFindFirst<T extends P.wp_usersFindFirstArgs>(
+  args: P.SelectSubset<T, P.wp_usersFindFirstArgs>
+): Promise<
+  P.CheckSelect<
+    T,
+    Backend.Result<wp_users | null>,
+    PrismaPromise<Backend.Result<P.wp_usersGetPayload<T>>>
+  >
+> {
+  return send({
+    url: '/api/user/findFirst',
+    body: { args },
   });
 }

@@ -2,17 +2,18 @@ import type { NextPage } from 'next';
 import axios from 'axios';
 import { useEffect } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
+import { r } from '../utils';
 import styles from '../styles/Home.module.css';
 
 const Home: NextPage = () => {
   useEffect(() => {
     (async () => {
-      const res = await axios.request({
-        method: 'GET',
-        url: '/api/user/findFirst',
+      const res = await r.userFindFirst({
+        select: {
+          ID: true,
+        },
       });
-      console.log(res?.data, 43);
+      console.log(res.data);
     })();
   }, []);
   return (

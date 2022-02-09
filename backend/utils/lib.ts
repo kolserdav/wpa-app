@@ -30,3 +30,22 @@ export function saveLog({
     console.warn(new Date(), message, req.body.args, body);
   }
 }
+
+/**
+ * Серриализует bigint для next
+ */
+export const serializeBigInt = (object: any): any => {
+  if (!object) {
+    return object;
+  }
+  const keys = Object.keys(object);
+  const newObj = { ...object };
+  for (let i = 0; keys[i]; i++) {
+    const key = keys[i];
+    const val = object[key];
+    if (typeof val === 'bigint') {
+      newObj[key] = parseInt(val.toString(), 10);
+    }
+  }
+  return newObj;
+};

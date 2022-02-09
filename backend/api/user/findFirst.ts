@@ -1,5 +1,5 @@
 import { PrismaClient, wp_users, Prisma } from '@prisma/client';
-import { saveLog, getStdErrMessage } from '../../utils';
+import { saveLog, getStdErrMessage, serializeBigInt } from '../../utils';
 
 const prisma = new PrismaClient();
 
@@ -36,7 +36,7 @@ const handler: Backend.RequestHandler<void, Body, wp_users | null> = async (req,
   return res.status(200).json({
     status: 'success',
     message: '',
-    data: result,
+    data: serializeBigInt(result),
   });
 };
 
