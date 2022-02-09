@@ -8,12 +8,8 @@ import styles from '../styles/Home.module.css';
 const Home: NextPage = () => {
   useEffect(() => {
     (async () => {
-      const res = await r.userFindFirst({
-        select: {
-          ID: true,
-        },
-      });
-      console.log(res.data);
+      const res = await r.userFindFirst({});
+      console.log(res);
     })();
   }, []);
   return (
