@@ -1,4 +1,5 @@
 import * as E from 'express';
+import JWT from 'jsonwebtoken';
 
 const dev = process.env.NODE_ENV === 'development';
 
@@ -49,3 +50,23 @@ export const serializeBigInt = (object: any): any => {
   }
   return newObj;
 };
+
+/**
+ * парсинг токена авторизации
+ */
+export function parseToken(token: string, req: E.Request): Backend.JWT | null {
+  if (!token || token === 'null' || token === 'undefined') {
+    return null;
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let data: any = null;
+  try {
+    data = jwt.verify(token.replace(/Bearer\s*/, ''), JSONWEBTOKEN_KEY);
+  } catch (e) {
+    if (token !== 'null') {
+      saveLog(e, req, 'Error parse token', { token });
+    }
+    return null;
+  }
+  return data;
+}
